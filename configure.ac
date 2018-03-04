@@ -681,6 +681,23 @@ AS_IF([test "x$enable_osc" != xno],
 AS_IF([test "x$have_liblo" = xyes],
       [AC_DEFINE([HAVE_LIBLO], [1], [define if liblo is installed])])
 
+# PyGPIO Support.
+# look for pigpio if the user asked us to
+AC_ARG_ENABLE(
+  [pigpio],
+  [AS_HELP_STRING([--disable-pigpio],
+                  [Disable the pigpio plugin even if pigpio exists])])
+
+have_pigpio="no"
+AS_IF([test "x$enable_pigpio" != xno],
+      [AC_CHECK_LIB([pigpiod_if2], [pigpio_start], [have_pigpio="yes"])])
+
+AS_IF([test "x$enable_pigpio" != xno],
+      [AC_CHECK_HEADER([pigpiod_if2.h], [], [have_pigpio="no"])])
+
+AS_IF([test "x$have_pigpio" = xyes],
+      [AC_DEFINE([HAVE_PIGPIO], [1], [define if pygpio is installed])])
+
 # Python API
 AC_ARG_ENABLE(
   [python-libs],
