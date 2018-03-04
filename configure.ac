@@ -681,7 +681,7 @@ AS_IF([test "x$enable_osc" != xno],
 AS_IF([test "x$have_liblo" = xyes],
       [AC_DEFINE([HAVE_LIBLO], [1], [define if liblo is installed])])
 
-# PyGPIO Support.
+# PiGPIO Support.
 # look for pigpio if the user asked us to
 AC_ARG_ENABLE(
   [pigpio],
@@ -847,6 +847,7 @@ PLUGIN_SUPPORT(opendmx, USE_OPENDMX)
 PLUGIN_SUPPORT(openpixelcontrol, USE_OPENPIXELCONTROL)
 PLUGIN_SUPPORT(osc, USE_OSC, [$have_liblo])
 PLUGIN_SUPPORT(pathport, USE_PATHPORT)
+PLUGIN_SUPPORT(pigpio, USE_PIGPIO, [$have_pigpio])
 PLUGIN_SUPPORT(renard, USE_RENARD)
 PLUGIN_SUPPORT(sandnet, USE_SANDNET)
 PLUGIN_SUPPORT(shownet, USE_SHOWNET)
