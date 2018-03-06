@@ -11,6 +11,7 @@ include plugins/opendmx/Makefile.mk
 include plugins/openpixelcontrol/Makefile.mk
 include plugins/osc/Makefile.mk
 include plugins/pathport/Makefile.mk
+include plugins/pigpio/Makefile.mk
 include plugins/renard/Makefile.mk
 include plugins/sandnet/Makefile.mk
 include plugins/shownet/Makefile.mk
