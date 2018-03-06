@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXDevice.cpp
+ * PigpioDevice.cpp
  * This represents a device and manages thread, widget and input/output ports.
  * Copyright (C) 2017 Florian Edelmann
  */
@@ -22,20 +22,20 @@
 #include <memory>
 #include "ola/Logging.h"
 #include "ola/StringUtils.h"
-#include "plugins/spidmx/SPIDMXDevice.h"
-#include "plugins/spidmx/SPIDMXPort.h"
+#include "plugins/pigpio/PigpioDevice.h"
+#include "plugins/pigpio/PigpioPort.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
 using std::string;
 
-const unsigned int SPIDMXDevice::PREF_BLOCKLENGTH_DEFAULT = 4096;
-const char SPIDMXDevice::PREF_BLOCKLENGTH_KEY[] = "-blocklength";
+const unsigned int PigpioDevice::PREF_BLOCKLENGTH_DEFAULT = 4096;
+const char PigpioDevice::PREF_BLOCKLENGTH_KEY[] = "-blocklength";
 
 
-SPIDMXDevice::SPIDMXDevice(AbstractPlugin *owner,
+PigpioDevice::PigpioDevice(AbstractPlugin *owner,
                            class Preferences *preferences,
                            PluginAdaptor *plugin_adaptor,
                            const string &name,
@@ -54,31 +54,31 @@ SPIDMXDevice::SPIDMXDevice(AbstractPlugin *owner,
     m_blocklength = PREF_BLOCKLENGTH_DEFAULT;
   }
 
-  m_widget.reset(new SPIDMXWidget(path));
-  m_thread.reset(new SPIDMXThread(m_widget.get(), m_blocklength));
+  m_widget.reset(new PigpioWidget(path));
+  m_thread.reset(new PigpioThread(m_widget.get(), m_blocklength));
 }
 
-SPIDMXDevice::~SPIDMXDevice() {
+PigpioDevice::~PigpioDevice() {
   if (m_widget->IsOpen()) {
     m_widget->Close();
   }
   m_thread->Stop();
 }
 
-bool SPIDMXDevice::StartHook() {
-  AddPort(new SPIDMXInputPort(this, 0, m_plugin_adaptor, m_widget.get(),
+bool PigpioDevice::StartHook() {
+  AddPort(new PigpioInputPort(this, 0, m_plugin_adaptor, m_widget.get(),
                               m_thread.get()));
   return true;
 }
 
-string SPIDMXDevice::DeviceBlocklength() const {
+string PigpioDevice::DeviceBlocklength() const {
   return m_path + PREF_BLOCKLENGTH_KEY;
 }
 
 /**
  * Set the default preferences for this one Device
  */
-void SPIDMXDevice::SetDefaults() {
+void PigpioDevice::SetDefaults() {
   if (!m_preferences) {
     return;
   }
@@ -91,6 +91,6 @@ void SPIDMXDevice::SetDefaults() {
   }
 }
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola

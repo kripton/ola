@@ -13,39 +13,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXPort.h
+ * PigpioPort.h
  * This represents the input / output ports that hook into the thread.
  * Copyright (C) 2017 Florian Edelmann
  */
 
-#ifndef PLUGINS_SPIDMX_SPIDMXPORT_H_
-#define PLUGINS_SPIDMX_SPIDMXPORT_H_
+#ifndef PLUGINS_Pigpio_PigpioPORT_H_
+#define PLUGINS_Pigpio_PigpioPORT_H_
 
 #include <string>
 
 #include "ola/DmxBuffer.h"
 #include "olad/Port.h"
 #include "olad/Preferences.h"
-#include "plugins/spidmx/SPIDMXDevice.h"
-#include "plugins/spidmx/SPIDMXWidget.h"
-#include "plugins/spidmx/SPIDMXThread.h"
+#include "plugins/pigpio/PigpioDevice.h"
+#include "plugins/pigpio/PigpioWidget.h"
+#include "plugins/pigpio/PigpioThread.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
-class SPIDMXInputPort : public ola::BasicInputPort {
+class PigpioInputPort : public ola::BasicInputPort {
  public:
-  SPIDMXInputPort(SPIDMXDevice *parent,
+  PigpioInputPort(PigpioDevice *parent,
                   unsigned int id,
                   PluginAdaptor *plugin_adaptor,
-                  SPIDMXWidget *widget,
-                  SPIDMXThread *thread)
+                  PigpioWidget *widget,
+                  PigpioThread *thread)
       : BasicInputPort(parent, id, plugin_adaptor, false),
         m_widget(widget),
         m_thread(thread) {
   }
-  ~SPIDMXInputPort() {}
+  ~PigpioInputPort() {}
 
   const DmxBuffer &ReadDMX() const {
     return m_thread->GetDmxInBuffer();
@@ -68,13 +68,13 @@ class SPIDMXInputPort : public ola::BasicInputPort {
   }
 
  private:
-  SPIDMXWidget *m_widget;
-  SPIDMXThread *m_thread;
+  PigpioWidget *m_widget;
+  PigpioThread *m_thread;
 
-  DISALLOW_COPY_AND_ASSIGN(SPIDMXInputPort);
+  DISALLOW_COPY_AND_ASSIGN(PigpioInputPort);
 };
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola
-#endif  // PLUGINS_SPIDMX_SPIDMXPORT_H_
+#endif  // PLUGINS_Pigpio_PigpioPORT_H_

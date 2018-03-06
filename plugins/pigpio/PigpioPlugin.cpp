@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXPlugin.cpp
+ * PigpioPlugin.cpp
  * This looks for possible SPI devices to instantiate and is managed by OLAD.
  * Copyright (C) 2017 Florian Edelmann
  */
@@ -30,26 +30,26 @@
 #include "ola/file/Util.h"
 #include "olad/Preferences.h"
 #include "olad/PluginAdaptor.h"
-#include "plugins/spidmx/SPIDMXPlugin.h"
-#include "plugins/spidmx/SPIDMXPluginDescription.h"
-#include "plugins/spidmx/SPIDMXDevice.h"
+#include "plugins/pigpio/PigpioPlugin.h"
+#include "plugins/pigpio/PigpioPluginDescription.h"
+#include "plugins/pigpio/PigpioDevice.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
 using std::string;
 using std::vector;
 
-const char SPIDMXPlugin::PLUGIN_NAME[] = "SPI native DMX";
-const char SPIDMXPlugin::PLUGIN_PREFIX[] = "spidmx";
-const char SPIDMXPlugin::PREF_DEVICE_PREFIX_DEFAULT[] = "spidev";
-const char SPIDMXPlugin::PREF_DEVICE_PREFIX_KEY[] = "device_prefix";
+const char PigpioPlugin::PLUGIN_NAME[] = "SPI native DMX";
+const char PigpioPlugin::PLUGIN_PREFIX[] = "pigpio";
+const char PigpioPlugin::PREF_DEVICE_PREFIX_DEFAULT[] = "spidev";
+const char PigpioPlugin::PREF_DEVICE_PREFIX_KEY[] = "device_prefix";
 
 /*
  * Start the plugin by finding all SPI devices.
  */
-bool SPIDMXPlugin::StartHook() {
+bool PigpioPlugin::StartHook() {
   vector<string> spi_devices;
   vector<string> spi_prefixes = m_preferences->GetMultipleValue(
       PREF_DEVICE_PREFIX_KEY);
@@ -60,7 +60,7 @@ bool SPIDMXPlugin::StartHook() {
   vector<string>::const_iterator iter;  // iterate over devices
 
   for (iter = spi_devices.begin(); iter != spi_devices.end(); ++iter) {
-    SPIDMXDevice *device = new SPIDMXDevice(this, m_preferences,
+    PigpioDevice *device = new PigpioDevice(this, m_preferences,
                                             m_plugin_adaptor, PLUGIN_NAME,
                                             *iter);
 
@@ -83,8 +83,8 @@ bool SPIDMXPlugin::StartHook() {
 /**
  * Stop all the devices.
  */
-bool SPIDMXPlugin::StopHook() {
-  SPIDMXDeviceVector::iterator iter;
+bool PigpioPlugin::StopHook() {
+  PigpioDeviceVector::iterator iter;
   for (iter = m_devices.begin(); iter != m_devices.end(); ++iter) {
     m_plugin_adaptor->UnregisterDevice(*iter);
     (*iter)->Stop();
@@ -98,7 +98,7 @@ bool SPIDMXPlugin::StopHook() {
 /**
  * Return a description for this plugin.
  */
-string SPIDMXPlugin::Description() const {
+string PigpioPlugin::Description() const {
   return plugin_description;
 }
 
@@ -106,7 +106,7 @@ string SPIDMXPlugin::Description() const {
 /*
  * Load the plugin prefs and default to sensible values
  */
-bool SPIDMXPlugin::SetDefaultPreferences() {
+bool PigpioPlugin::SetDefaultPreferences() {
   if (!m_preferences) {
     return false;
   }
@@ -125,6 +125,6 @@ bool SPIDMXPlugin::SetDefaultPreferences() {
   return true;
 }
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola

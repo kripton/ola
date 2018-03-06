@@ -13,13 +13,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXDevice.h
+ * PigpioDevice.h
  * This represents a device and manages thread, widget and input/output ports.
  * Copyright (C) 2017 Florian Edelmann
  */
 
-#ifndef PLUGINS_SPIDMX_SPIDMXDEVICE_H_
-#define PLUGINS_SPIDMX_SPIDMXDEVICE_H_
+#ifndef PLUGINS_Pigpio_PigpioDEVICE_H_
+#define PLUGINS_Pigpio_PigpioDEVICE_H_
 
 #include <string>
 #include <sstream>
@@ -27,24 +27,24 @@
 #include "ola/DmxBuffer.h"
 #include "olad/Device.h"
 #include "olad/Preferences.h"
-#include "plugins/spidmx/SPIDMXWidget.h"
-#include "plugins/spidmx/SPIDMXThread.h"
+#include "plugins/pigpio/PigpioWidget.h"
+#include "plugins/pigpio/PigpioThread.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
-class SPIDMXDevice : public Device {
+class PigpioDevice : public Device {
  public:
-  SPIDMXDevice(AbstractPlugin *owner,
+  PigpioDevice(AbstractPlugin *owner,
                class Preferences *preferences,
                PluginAdaptor *plugin_adaptor,
                const std::string &name,
                const std::string &path);
-  ~SPIDMXDevice();
+  ~PigpioDevice();
 
   std::string DeviceId() const { return m_path; }
-  SPIDMXWidget* GetWidget() { return m_widget.get(); }
+  PigpioWidget* GetWidget() { return m_widget.get(); }
 
  protected:
   bool StartHook();
@@ -55,8 +55,8 @@ class SPIDMXDevice : public Device {
   void SetDefaults();
 
 
-  std::auto_ptr<SPIDMXWidget> m_widget;
-  std::auto_ptr<SPIDMXThread> m_thread;
+  std::auto_ptr<PigpioWidget> m_widget;
+  std::auto_ptr<PigpioThread> m_thread;
   class Preferences *m_preferences;
   PluginAdaptor *m_plugin_adaptor;
   const std::string m_name;
@@ -66,10 +66,10 @@ class SPIDMXDevice : public Device {
   static const unsigned int PREF_BLOCKLENGTH_DEFAULT;
   static const char PREF_BLOCKLENGTH_KEY[];
 
-  DISALLOW_COPY_AND_ASSIGN(SPIDMXDevice);
+  DISALLOW_COPY_AND_ASSIGN(PigpioDevice);
 };
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola
-#endif  // PLUGINS_SPIDMX_SPIDMXDEVICE_H_
+#endif  // PLUGINS_Pigpio_PigpioDEVICE_H_

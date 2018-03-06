@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXThread.cpp
+ * PigpioThread.cpp
  * This thread runs while one or more ports are registered. It simultaneously
  * reads / writes SPI data and then calls the parser. This is repeated forever.
  * Copyright (C) 2017 Florian Edelmann
@@ -21,15 +21,15 @@
 
 #include <string>
 #include "ola/Logging.h"
-#include "plugins/spidmx/SPIDMXWidget.h"
-#include "plugins/spidmx/SPIDMXThread.h"
-#include "plugins/spidmx/SPIDMXParser.h"
+#include "plugins/pigpio/PigpioWidget.h"
+#include "plugins/pigpio/PigpioThread.h"
+#include "plugins/pigpio/PigpioParser.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
-SPIDMXThread::SPIDMXThread(SPIDMXWidget *widget, unsigned int blocklength)
+PigpioThread::PigpioThread(PigpioWidget *widget, unsigned int blocklength)
   : m_widget(widget),
     m_blocklength(blocklength),
     m_term(false),
@@ -38,7 +38,7 @@ SPIDMXThread::SPIDMXThread(SPIDMXWidget *widget, unsigned int blocklength)
     m_spi_tx_buffer(blocklength) {
 }
 
-SPIDMXThread::~SPIDMXThread() {
+PigpioThread::~PigpioThread() {
   Stop();
 }
 
@@ -46,14 +46,14 @@ SPIDMXThread::~SPIDMXThread() {
  * This thread only has to run if ports using it are patched to a universe.
  * Thus, they must register and unregister to notify this thread.
  */
-void SPIDMXThread::RegisterPort() {
+void PigpioThread::RegisterPort() {
   m_registered_ports++;
 
   if (m_registered_ports >= 1) {
     Start();
   }
 }
-void SPIDMXThread::UnregisterPort() {
+void PigpioThread::UnregisterPort() {
   m_registered_ports--;
 
   if (m_registered_ports <= 0) {
@@ -65,7 +65,7 @@ void SPIDMXThread::UnregisterPort() {
 /**
  * Stop this thread
  */
-bool SPIDMXThread::Stop() {
+bool PigpioThread::Stop() {
   {
     ola::thread::MutexLocker locker(&m_term_mutex);
     m_term = true;
@@ -77,7 +77,7 @@ bool SPIDMXThread::Stop() {
 /**
  * Copy a DmxBuffer to the output thread
  */
-bool SPIDMXThread::WriteDMX(const DmxBuffer &buffer) {
+bool PigpioThread::WriteDMX(const DmxBuffer &buffer) {
   ola::thread::MutexLocker locker(&m_buffer_mutex);
   m_dmx_tx_buffer.Set(buffer);
   return true;
@@ -87,7 +87,7 @@ bool SPIDMXThread::WriteDMX(const DmxBuffer &buffer) {
   * @brief Get DMX Buffer
   * @returns DmxBuffer with current input values.
   */
-const DmxBuffer &SPIDMXThread::GetDmxInBuffer() const {
+const DmxBuffer &PigpioThread::GetDmxInBuffer() const {
   return m_dmx_rx_buffer;
 }
 
@@ -97,7 +97,7 @@ const DmxBuffer &SPIDMXThread::GetDmxInBuffer() const {
   * @param callback The callback to call or NULL to unregister.
   * @return false if there was an error, true otherwise.
   */
-bool SPIDMXThread::SetReceiveCallback(Callback0<void> *callback) {
+bool PigpioThread::SetReceiveCallback(Callback0<void> *callback) {
   if (!callback) {
     // InputPort unregistered
     UnregisterPort();
@@ -118,7 +118,7 @@ bool SPIDMXThread::SetReceiveCallback(Callback0<void> *callback) {
 /**
  * The method called by the thread
  */
-void *SPIDMXThread::Run() {
+void *PigpioThread::Run() {
   DmxBuffer dmx_buffer;
 
   uint8_t *spi_rx_ptr;
@@ -127,13 +127,13 @@ void *SPIDMXThread::Run() {
   // Setup the widget
   if (!m_widget->IsOpen()) {
     if (!m_widget->SetupOutput()) {
-      OLA_INFO << "SPIDMXThread stopped because SPI widget could not be opened";
+      OLA_INFO << "PigpioThread stopped because SPI widget could not be opened";
       return NULL;
     }
   }
 
   // Setup the parser
-  SPIDMXParser *parser = new SPIDMXParser(&m_dmx_rx_buffer,
+  PigpioParser *parser = new PigpioParser(&m_dmx_rx_buffer,
                                           m_receive_callback.get());
 
   while (1) {
@@ -159,7 +159,7 @@ void *SPIDMXThread::Run() {
     spi_tx_ptr = &m_spi_tx_buffer[0];
 
     if (!m_widget->ReadWrite(spi_tx_ptr, spi_rx_ptr, m_blocklength)) {
-      OLA_WARN << "SPIDMX Read / Write failed, stopping thread...";
+      OLA_WARN << "Pigpio Read / Write failed, stopping thread...";
       break;
     }
 
@@ -171,6 +171,6 @@ void *SPIDMXThread::Run() {
   return NULL;
 }
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola

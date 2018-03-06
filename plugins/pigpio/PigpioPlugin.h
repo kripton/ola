@@ -13,13 +13,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXPlugin.h
+ * PigpioPlugin.h
  * This looks for possible SPI devices to instantiate and is managed by OLAD.
  * Copyright (C) 2017 Florian Edelmann
  */
 
-#ifndef PLUGINS_SPIDMX_SPIDMXPLUGIN_H_
-#define PLUGINS_SPIDMX_SPIDMXPLUGIN_H_
+#ifndef PLUGINS_Pigpio_PigpioPLUGIN_H_
+#define PLUGINS_Pigpio_PigpioPLUGIN_H_
 
 #include <set>
 #include <string>
@@ -28,20 +28,20 @@
 #include "olad/Plugin.h"
 #include "ola/plugin_id.h"
 
-#include "plugins/spidmx/SPIDMXDevice.h"
+#include "plugins/pigpio/PigpioDevice.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
-class SPIDMXPlugin : public Plugin {
+class PigpioPlugin : public Plugin {
  public:
-  explicit SPIDMXPlugin(PluginAdaptor *plugin_adaptor)
+  explicit PigpioPlugin(PluginAdaptor *plugin_adaptor)
       : Plugin(plugin_adaptor),
         m_plugin_adaptor(plugin_adaptor) {
   }
 
-  ola_plugin_id Id() const { return OLA_PLUGIN_SPIDMX; }
+  ola_plugin_id Id() const { return OLA_PLUGIN_PIGPIO; }
   std::string Name() const { return PLUGIN_NAME; }
   std::string PluginPrefix() const { return PLUGIN_PREFIX; }
 
@@ -51,12 +51,12 @@ class SPIDMXPlugin : public Plugin {
   std::string Description() const;
 
  private:
-  typedef std::vector<SPIDMXDevice*> SPIDMXDeviceVector;
-  SPIDMXDeviceVector m_devices;
+  typedef std::vector<PigpioDevice*> PigpioDeviceVector;
+  PigpioDeviceVector m_devices;
 
   PluginAdaptor *m_plugin_adaptor;
 
-  void AddDevice(SPIDMXDevice *device);
+  void AddDevice(PigpioDevice *device);
   bool StartHook();
   bool StopHook();
   bool SetDefaultPreferences();
@@ -66,10 +66,10 @@ class SPIDMXPlugin : public Plugin {
   static const char PREF_DEVICE_PREFIX_DEFAULT[];
   static const char PREF_DEVICE_PREFIX_KEY[];
 
-  DISALLOW_COPY_AND_ASSIGN(SPIDMXPlugin);
+  DISALLOW_COPY_AND_ASSIGN(PigpioPlugin);
 };
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola
-#endif  // PLUGINS_SPIDMX_SPIDMXPLUGIN_H_
+#endif  // PLUGINS_Pigpio_PigpioPLUGIN_H_

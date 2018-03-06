@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXWidget.cpp
+ * PigpioWidget.cpp
  * This is a wrapper around the required SPIDEV calls.
  * Copyright (C) 2017 Florian Edelmann
  */
@@ -37,28 +37,28 @@
 #include "ola/io/ExtendedSerial.h"
 #include "ola/io/IOUtils.h"
 #include "ola/Logging.h"
-#include "plugins/spidmx/SPIDMXWidget.h"
+#include "plugins/pigpio/PigpioWidget.h"
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
 using std::string;
 using std::vector;
 
-SPIDMXWidget::SPIDMXWidget(const string& path)
+PigpioWidget::PigpioWidget(const string& path)
     : m_path(path),
       m_fd(NOT_OPEN) {
 }
 
-SPIDMXWidget::~SPIDMXWidget() {
+PigpioWidget::~PigpioWidget() {
   if (IsOpen()) {
     Close();
   }
 }
 
 
-bool SPIDMXWidget::Open() {
+bool PigpioWidget::Open() {
   OLA_DEBUG << "Opening SPI port " << Name();
   if (!ola::io::Open(m_path, O_RDWR, &m_fd)) {
     m_fd = FAILED_OPEN;
@@ -70,7 +70,7 @@ bool SPIDMXWidget::Open() {
   return true;
 }
 
-bool SPIDMXWidget::Close() {
+bool PigpioWidget::Close() {
   if (!IsOpen()) {
     return true;
   }
@@ -85,7 +85,7 @@ bool SPIDMXWidget::Close() {
   return true;
 }
 
-bool SPIDMXWidget::IsOpen() const {
+bool PigpioWidget::IsOpen() const {
   return m_fd >= 0;
 }
 
@@ -95,7 +95,7 @@ bool SPIDMXWidget::IsOpen() const {
  *
  * @returns false if send/receive operation failed, true otherwise
  */
-bool SPIDMXWidget::ReadWrite(uint8_t *tx_buf, uint8_t *rx_buf,
+bool PigpioWidget::ReadWrite(uint8_t *tx_buf, uint8_t *rx_buf,
                              uint32_t blocklength) {
   struct spi_ioc_transfer tr;
   memset(&tr, 0, sizeof(spi_ioc_transfer));
@@ -122,7 +122,7 @@ bool SPIDMXWidget::ReadWrite(uint8_t *tx_buf, uint8_t *rx_buf,
 /**
  * Setup our device for DMX receive.
  */
-bool SPIDMXWidget::SetupOutput() {
+bool PigpioWidget::SetupOutput() {
   if (!IsOpen()) {
     if (!Open()) {
       return false;
@@ -180,6 +180,6 @@ bool SPIDMXWidget::SetupOutput() {
   return true;
 }
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola

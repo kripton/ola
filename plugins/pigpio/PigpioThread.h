@@ -13,14 +13,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXThread.h
+ * PigpioThread.h
  * This thread runs while one or more ports are registered. It simultaneously
  * reads / writes SPI data and then calls the parser. This is repeated forever.
  * Copyright (C) 2017 Florian Edelmann
  */
 
-#ifndef PLUGINS_SPIDMX_SPIDMXTHREAD_H_
-#define PLUGINS_SPIDMX_SPIDMXTHREAD_H_
+#ifndef PLUGINS_Pigpio_PigpioTHREAD_H_
+#define PLUGINS_Pigpio_PigpioTHREAD_H_
 
 #include <memory>
 #include <vector>
@@ -31,12 +31,12 @@
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
-class SPIDMXThread : public ola::thread::Thread {
+class PigpioThread : public ola::thread::Thread {
  public:
-  SPIDMXThread(SPIDMXWidget *widget, unsigned int blocklength);
-  ~SPIDMXThread();
+  PigpioThread(PigpioWidget *widget, unsigned int blocklength);
+  ~PigpioThread();
 
   void RegisterPort();
   void UnregisterPort();
@@ -50,7 +50,7 @@ class SPIDMXThread : public ola::thread::Thread {
   bool SetReceiveCallback(Callback0<void> *callback);
 
  private:
-  SPIDMXWidget *m_widget;
+  PigpioWidget *m_widget;
   unsigned int m_blocklength;
 
   bool m_term;
@@ -72,10 +72,10 @@ class SPIDMXThread : public ola::thread::Thread {
   ola::thread::Mutex m_term_mutex;
   ola::thread::Mutex m_buffer_mutex;
 
-  DISALLOW_COPY_AND_ASSIGN(SPIDMXThread);
+  DISALLOW_COPY_AND_ASSIGN(PigpioThread);
 };
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola
-#endif  // PLUGINS_SPIDMX_SPIDMXTHREAD_H_
+#endif  // PLUGINS_Pigpio_PigpioTHREAD_H_

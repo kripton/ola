@@ -13,13 +13,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * SPIDMXWidget.h
+ * PigpioWidget.h
  * This is a wrapper around the required SPIDEV calls.
  * Copyright (C) 2017 Florian Edelmann
  */
 
-#ifndef PLUGINS_SPIDMX_SPIDMXWIDGET_H_
-#define PLUGINS_SPIDMX_SPIDMXWIDGET_H_
+#ifndef PLUGINS_Pigpio_PigpioWIDGET_H_
+#define PLUGINS_Pigpio_PigpioWIDGET_H_
 
 #include <linux/spi/spidev.h>
 #include <string>
@@ -30,21 +30,21 @@
 
 namespace ola {
 namespace plugin {
-namespace spidmx {
+namespace pigpio {
 
 /**
  * An SPI widget (i.e. a serial port with suitable hardware attached)
  */
-class SPIDMXWidget {
+class PigpioWidget {
  public:
   /**
-    * Construct a new SPIDMXWidget instance for one widget.
+    * Construct a new PigpioWidget instance for one widget.
     * @param path The device file path of the serial port
     */
-  explicit SPIDMXWidget(const std::string &path);
+  explicit PigpioWidget(const std::string &path);
 
   /** Destructor */
-  ~SPIDMXWidget();
+  ~PigpioWidget();
 
   /** Get the widget's device name */
   std::string Name() const { return m_path; }
@@ -101,10 +101,10 @@ class SPIDMXWidget {
   /** Not relevant since we don't use the clock signal. */
   static const uint8_t SPI_MODE = SPI_MODE_0;
 
-  DISALLOW_COPY_AND_ASSIGN(SPIDMXWidget);
+  DISALLOW_COPY_AND_ASSIGN(PigpioWidget);
 };
 
-}  // namespace spidmx
+}  // namespace pigpio
 }  // namespace plugin
 }  // namespace ola
-#endif  // PLUGINS_SPIDMX_SPIDMXWIDGET_H_
+#endif  // PLUGINS_Pigpio_PigpioWIDGET_H_
