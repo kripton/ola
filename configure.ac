@@ -696,7 +696,7 @@ AS_IF([test "x$enable_pigpio" != xno],
       [AC_CHECK_HEADER([pigpiod_if2.h], [], [have_pigpio="no"])])
 
 AS_IF([test "x$have_pigpio" = xyes],
-      [AC_DEFINE([HAVE_PIGPIO], [1], [define if pygpio is installed])])
+      [AC_DEFINE([HAVE_PIGPIO], [1], [define if pigpio is installed])])
 
 # Python API
 AC_ARG_ENABLE(
